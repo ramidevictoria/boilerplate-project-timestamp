@@ -19,10 +19,64 @@ app.get("/", function (req, res) {
 });
 
 
-// your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
-});
+app
+  .route('/api/:date?/:month?/:day?')
+  .get((req,res) => {
+    let date, query = req.params.date ? req.params.date : null;
+
+    if (query) {
+      query.replace('-', '/');
+    
+    if (!isNaN(parseFloat(query)) && isFinite(query)) {
+      query = parseInt(query, 10);
+    }
+      if (req.params.month && req.params.day) {
+        query += `/${req.params.month}/${req.params.day}`;
+      }
+
+       date = new Date(query);
+
+    } else {
+      date = new Date();
+    }
+
+  
+      
+     
+      
+    
+      if (isNaN(date.getTime())) {
+        res.status(400).send({error: "Invalid date"})
+      }
+    
+    res.send({unix: Math.floor(date.getTime()), utc: date.toUTCString()});
+  })
+  .post((req, res) => {
+    let date, query = req.body.date ? req.params.date : null;
+
+    
+
+    if (query) {
+      query.replace('-', '/');
+if (!isNaN(parseFloat(query)) && isFinite(query)) {
+      query = parseInt(query, 10);
+    }
+      if (req.body.month && req.body.day) {
+        query += `/${req.params.month}/${req.params.day}`;
+      }
+     date = new Date(query);
+
+    } else {
+      date = new Date();
+    }
+      
+    
+      if (isNaN(date.getTime())) {
+        res.status(400).send({error: "Invalid date"})
+      }
+    
+    res.send({unix: Math.floor(date.getTime()), utc: date.toUTCString()});
+  });
 
 
 
