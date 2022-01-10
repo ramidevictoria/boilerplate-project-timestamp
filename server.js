@@ -19,9 +19,7 @@ app.get("/", function (req, res) {
 });
 
 
-app
-  .route('/api/:date?/:month?/:day?')
-  .get((req,res) => {
+app.get('/api/:date?', (req,res) => {
     let date, query = req.params.date ? req.params.date : null;
 
     if (query) {
@@ -30,46 +28,12 @@ app
     if (!isNaN(parseFloat(query)) && isFinite(query)) {
       query = parseInt(query, 10);
     }
-      if (req.params.month && req.params.day) {
-        query += `/${req.params.month}/${req.params.day}`;
-      }
 
        date = new Date(query);
 
     } else {
       date = new Date();
     }
-
-  
-      
-     
-      
-    
-      if (isNaN(date.getTime())) {
-        res.status(400).send({error: "Invalid date"})
-      }
-    
-    res.send({unix: Math.floor(date.getTime()), utc: date.toUTCString()});
-  })
-  .post((req, res) => {
-    let date, query = req.body.date ? req.params.date : null;
-
-    
-
-    if (query) {
-      query.replace('-', '/');
-if (!isNaN(parseFloat(query)) && isFinite(query)) {
-      query = parseInt(query, 10);
-    }
-      if (req.body.month && req.body.day) {
-        query += `/${req.params.month}/${req.params.day}`;
-      }
-     date = new Date(query);
-
-    } else {
-      date = new Date();
-    }
-      
     
       if (isNaN(date.getTime())) {
         res.status(400).send({error: "Invalid date"})
